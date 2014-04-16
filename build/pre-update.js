@@ -1,1 +1,0 @@
-require('fs').writeFileSync(require('path').join(__dirname, 'pre-version'), require('../package').version);
