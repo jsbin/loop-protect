@@ -2,8 +2,7 @@
 /*global describe:true, it: true, beforeEach: true */
 var assert = require('assert');
 var sinon = require('sinon');
-var pwd = process.cwd();
-var loopProtect = require('../loop-protect');
+var loopProtect = require('../lib/loop-protect');
 
 // expose a window object for loopProtect compatibility
 global.window = {
