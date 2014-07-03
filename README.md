@@ -29,3 +29,9 @@ The loop protection can be used both on the client side and server side. It supp
 ## License
 
 http://jsbin.mit-license.org
+
+## Contributors
+
+- [Remy Sharp](https://github.com/remy)
+- [Tom Ashworth](https://github.com/phuu)
+- [Nathan Hammond](https://github.com/nathanhammond)
