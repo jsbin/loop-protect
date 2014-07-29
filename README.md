@@ -22,9 +22,10 @@ The loop protection can be used both on the client side and server side. It supp
 
 ### Methods
 
-- loopProtect.method
-- loopProtect.hit
-
+- loopProtect.method (string)
+- loopProtect.hit (callback)
+- loopProtect.debug (method)
+- loopProtect.protect (callback)
 
 ## License
 
