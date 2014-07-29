@@ -5,21 +5,18 @@
  * the loop. If the check function is called many many times then it returns
  * true, preventing the loop from running again.
  */
-
-if (typeof DEBUG === 'undefined') { DEBUG = true; }
 (function (root, factory) {
   'use strict';
   /*global define*/
   if (typeof define === 'function' && define.amd) {
-    define(factory(root));
+    define(factory());
   } else if (typeof exports === 'object') {
-    module.exports = factory(root);
+    module.exports = factory();
   } else {
-    root.loopProtect = factory(root);
+    root.loopProtect = factory();
   }
-})(this, function loopProtectModule(root) {
+})(this, function loopProtectModule() {
   'use strict';
-  /*global DEBUG*/
   var debug = null;
 
   // the standard loops - note that recursive is not supported
@@ -57,7 +54,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
 
     do {
       j -= 1;
-      DEBUG && debug('looking backwards ' + lines[j]); // jshint ignore:line
+      debug('looking backwards ' + lines[j]);
       closePos = lines[j].indexOf('*/');
       openPos = lines[j].indexOf('/*');
 
@@ -69,7 +66,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
         closeCommentTags--;
 
         if (closeCommentTags === 0) {
-          DEBUG && debug('- exit: part of a multiline comment'); // jshint ignore:line
+          debug('- exit: part of a multiline comment');
           return true;
         }
       }
@@ -84,7 +81,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
       character = line.substr(index, 1);
       if (character === '"' || character === '\'' || character === '.') {
         // our loop keyword was actually either in a string or a property, so let's exit and ignore this line
-        DEBUG && debug('- exit: matched inside a string or property key'); // jshint ignore:line
+        debug('- exit: matched inside a string or property key');
         return true;
       }
       if (character === '/' || character === '*') {
@@ -92,7 +89,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
         --index;
         if (character === '/') {
           // we've found a comment, so let's exit and ignore this line
-          DEBUG && debug('- exit: part of a comment'); // jshint ignore:line
+          debug('- exit: part of a comment');
           return true;
         }
       }
@@ -108,7 +105,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
     var theRest = lines.slice(lineNum).join('\n').substr(index).replace(labelRe, '');
     theRest.replace(reSingle, function (match, capture, i) {
       var target = theRest.substr(0, i).replace(comments, '').trim();
-      DEBUG && debug('- directlyBeforeLoop: ' + target); // jshint ignore:line
+      debug('- directlyBeforeLoop: ' + target);
       if (target.length === 0) {
         beforeLoop = true;
       }
@@ -173,31 +170,31 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
       var openBraces = 0;
 
       if (labelMatch.length) {
-        DEBUG && debug('- label match'); // jshint ignore:line
+        debug('- label match');
         index = line.indexOf(labelMatch[1]);
         if (!inCommentOrString(index, line)) {
           if (!inMultilineComment(lineNum, lines)) {
             if (directlyBeforeLoop(index, lineNum, lines)) {
-              DEBUG && debug('- found a label: "' + labelMatch[0] + '"'); // jshint ignore:line
+              debug('- found a label: "' + labelMatch[0] + '"');
               labelPostion = lineNum;
             } else {
-              DEBUG && debug('- ignored "label", false positive'); // jshint ignore:line
+              debug('- ignored "label", false positive');
             }
           } else {
-            DEBUG && debug('- ignored label in multline comment'); // jshint ignore:line
+            debug('- ignored label in multline comment');
           }
         } else {
-          DEBUG && debug('- ignored label in string or comment'); // jshint ignore:line
+          debug('- ignored label in string or comment');
         }
       }
 
       if (ignore[lineNum]) {
-        DEBUG && debug(' -exit: ignoring line ' + lineNum +': ' + line); // jshint ignore:line
+        debug(' -exit: ignoring line ' + lineNum +': ' + line);
         return;
       }
 
       if (pushonly[lineNum]) {
-        DEBUG && debug('- exit: ignoring, but adding line ' + lineNum + ': ' + line); // jshint ignore:line
+        debug('- exit: ignoring, but adding line ' + lineNum + ': ' + line);
         recompiled.push(line);
         return;
       }
@@ -206,7 +203,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
       // otherwise I'm going to be writing a full JavaScript lexer...and god
       // knows I've got better things to be doing.
       if (match && matches.length === 1 && line.indexOf('jsbin') === -1) {
-        DEBUG && debug('match on ' + match + '\n'); // jshint ignore:line
+        debug('match on ' + match + '\n');
 
         // there's a special case for protecting `do` loops, we need to first
         // prtect the `do`, but then ignore the closing `while` statement, so
@@ -239,7 +236,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
         if (index === line.length) {
           if (index === line.length && lineNum < (lines.length-1)) {
             // move to the next line
-            DEBUG && debug('- moving to next line'); // jshint ignore:line
+            debug('- moving to next line');
             recompiled.push(line);
             lineNum++;
             line = lines[lineNum];
@@ -251,7 +248,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
 
         while (index < line.length) {
           character = line.substr(index, 1);
-          // DEBUG && debug(character, index); // jshint ignore:line
+          // debug(character, index);
 
           if (character === '(') {
             openBrackets++;
@@ -277,18 +274,18 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
             // if we're a non-curlies loop, then convert to curlies to get our code inserted
             if (character === ';') {
               if (lineNum !== originalLineNum) {
-                DEBUG && debug('- multiline inline loop'); // jshint ignore:line
+                debug('- multiline inline loop');
                 // affect the compiled line
                 recompiled[originalLineNum] = recompiled[originalLineNum].substring(0, terminator + 1) + '{\nif (' + method + '({ line: ' + printLineNumber + ' })) break;\n' + recompiled[originalLineNum].substring(terminator + 1);
                 line += '\n}\n';
               } else {
                 // simpler
-                DEBUG && debug('- single line inline loop'); // jshint ignore:line
+                debug('- single line inline loop');
                 line = line.substring(0, terminator + 1) + '{\nif (' + method + '({ line: ' + printLineNumber + ' })) break;\n' + line.substring(terminator + 1) + '\n}\n';
               }
 
             } else if (character === '{') {
-              DEBUG && debug('- multiline with braces'); // jshint ignore:line
+              debug('- multiline with braces');
               var insert = ';\nif (' + method + '({ line: ' + printLineNumber + ' })) break;\n';
               line = line.substring(0, index + 1) + insert + line.substring(index + 1);
 
@@ -297,17 +294,17 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
 
             // work out where to put the reset
             if (lineNum === originalLineNum && labelPostion === null) {
-              DEBUG && debug('- simple reset insert'); // jshint ignore:line
+              debug('- simple reset insert');
               line = insertReset(printLineNumber, line, matchPosition);
               index += (';' + method + '({ line: ' + lineNum + ', reset: true }); ').length;
             } else {
               // insert the reset above the originalLineNum OR if this loop used
               // a label, we have to insert the reset *above* the label
               if (labelPostion === null) {
-                DEBUG && debug('- reset inserted above original line'); // jshint ignore:line
+                debug('- reset inserted above original line');
                 recompiled[originalLineNum] = insertReset(printLineNumber, recompiled[originalLineNum], matchPosition);
               } else {
-                DEBUG && debug('- reset inserted above matched label on line ' + labelPostion); // jshint ignore:line
+                debug('- reset inserted above matched label on line ' + labelPostion);
                 if (recompiled[labelPostion] === undefined) {
                   labelPostion--;
                   matchPosition = 0;
@@ -322,7 +319,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
             if (!dofound) {
               return;
             } else {
-              DEBUG && debug('searching for closing `while` statement for: ' + line); // jshint ignore:line
+              debug('searching for closing `while` statement for: ' + line);
               // cycle forward until we find the close brace, after which should
               // be our while statement to ignore
               findwhile = false;
@@ -337,6 +334,8 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
                   openBraces--;
                 }
 
+                // debug(character, openBraces);
+
                 if (openBraces === 0) {
                   findwhile = true;
                 } else {
@@ -344,11 +343,11 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
                 }
 
                 if (openBraces === 0) {
-                  DEBUG && debug('outside of closure, looking for `while` statement: ' + line); // jshint ignore:line
+                  debug('outside of closure, looking for `while` statement: ' + line);
                 }
 
                 if (findwhile && line.indexOf('while') !== -1) {
-                  DEBUG && debug('- exit as we found `while`: ' + line); // jshint ignore:line
+                  debug('- exit as we found `while`: ' + line);
                   pushonly[lineNum] = true;
                   return;
                 }
@@ -358,7 +357,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
                 if (index === line.length && lineNum < (lines.length-1)) {
                   lineNum++;
                   line = lines[lineNum];
-                  DEBUG && debug(line); // jshint ignore:line
+                  debug(line);
                   index = 0;
                 }
               }
@@ -370,7 +369,7 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
 
           if (index === line.length && lineNum < (lines.length-1)) {
             // move to the next line
-            DEBUG && debug('- moving to next line'); // jshint ignore:line
+            debug('- moving to next line');
             recompiled.push(line);
             lineNum++;
             line = lines[lineNum];
@@ -380,16 +379,16 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
         }
       } else {
         // else we're a regular line, and we shouldn't be touched
-        DEBUG && debug('regular line ' + line); // jshint ignore:line
+        debug('regular line ' + line);
         recompiled.push(line);
       }
     });
 
-    DEBUG && debug('---- source ----'); // jshint ignore:line
-    DEBUG && debug(code); // jshint ignore:line
-    DEBUG && debug('---- rewrite ---'); // jshint ignore:line
-    DEBUG && debug(recompiled.join('\n')); // jshint ignore:line
-    DEBUG && debug(''); // jshint ignore:line
+    debug('---- source ----');
+    debug(code);
+    debug('---- rewrite ---');
+    debug(recompiled.join('\n'));
+    debug('');
 
     return disableLoopProtection ? code : recompiled.join('\n');
   };
@@ -423,10 +422,10 @@ if (typeof DEBUG === 'undefined') { DEBUG = true; }
 
   loopProtect.hit = function (line) {
     var msg = 'Exiting potential infinite loop at line ' + line + '. To disable loop protection: add "// noprotect" to your code';
-    if (root.proxyConsole) {
-      root.proxyConsole.error(msg);
+    if (window.proxyConsole) {
+      window.proxy
     } else {
-      console.error(msg);
+      
     }
   };
 
