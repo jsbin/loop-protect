@@ -9,6 +9,10 @@ global.window = {
   runnerWindow: loopProtect
 };
 
+loopProtect.alias = 'window.runnerWindow';
+
+loopProtect.hit = function () {};
+
 var code = {
   simple: 'return "remy";',
   simplefor: 'var mul = 1; for (var i = 0; i < 10; i++) {\nmul = i;\n}\nreturn i',
@@ -57,7 +61,7 @@ describe('loop', function () {
 
   it('should ignore comments', function () {
     var c = code.ignorecomments;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     // console.log('\n---------\n' + c + '\n---------\n' + compiled);
     assert(compiled === c);
     var result = run(compiled);
@@ -65,18 +69,18 @@ describe('loop', function () {
   });
 
   it('should leave none loop code alone', function () {
-    assert(loopProtect.rewriteLoops(code.simple) === code.simple);
+    assert(loopProtect(code.simple) === code.simple);
   });
 
   it('should rewrite for loops', function () {
     var c = code.simplefor;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     var result = run(compiled);
     assert(result === 10);
 
     c = code.simplefor2;
-    compiled = loopProtect.rewriteLoops(c);
+    compiled = loopProtect(c);
     assert(compiled !== c);
     result = run(compiled);
     assert(result === 10);
@@ -84,7 +88,7 @@ describe('loop', function () {
 
   it('should handle one liner for with an inline function', function () {
     var c = code.onelineforinline;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     var result = run(compiled);
     assert(result === true, 'value is ' + result);
@@ -92,13 +96,13 @@ describe('loop', function () {
 
   it('should rewrite one line for loops', function () {
     var c = code.onelinefor;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     var result = run(compiled);
     assert(result === 10);
 
     c = code.onelinefor2;
-    compiled = loopProtect.rewriteLoops(c);
+    compiled = loopProtect(c);
     assert(compiled !== c);
 
     // console.log('\n---------\n' + c + '\n---------\n' + compiled);
@@ -109,7 +113,7 @@ describe('loop', function () {
 
   it('should rewrite one line while loops', function () {
     var c = code.onelinewhile2;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     // console.log('\n---------\n' + c + '\n---------\n' + compiled);
     var result = run(compiled);
@@ -118,7 +122,7 @@ describe('loop', function () {
 
   it('should protect infinite while', function () {
     var c = code.whiletrue;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
 
     assert(compiled !== c);
     assert(spy(compiled) === true);
@@ -126,14 +130,14 @@ describe('loop', function () {
 
   it('should protect infinite for', function () {
     var c = code.irl1;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     assert(spy(compiled) === 0);
   });
 
   it('should allow nested loops to run', function () {
     var c = code.irl2;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     var r = run(compiled);
     assert(compiled !== c);
     assert(r === 120000, r);
@@ -141,23 +145,23 @@ describe('loop', function () {
 
   it('should not rewrite "do" in strings', function () {
     var c = code.notloops;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled === c);
   });
 
 
   it('should not rewrite "do" in object properties', function () {
     var c = code.notprops;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled === c);
     c = code.irl3;
-    compiled = loopProtect.rewriteLoops(c);
+    compiled = loopProtect(c);
     assert(compiled === c);
   });
 
   it('should not rewrite "do" in comments', function () {
     var c = code.notcomments;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     // console.log(compiled);
     assert(compiled === c);
     assert(spy(compiled) === true);
@@ -165,7 +169,7 @@ describe('loop', function () {
 
   it('should rewrite loops when curlies are on the next line', function () {
     var c = code.dirtybraces;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     var r = spy(compiled);
     assert(compiled !== c);
     assert(r === 10000, r);
@@ -173,7 +177,7 @@ describe('loop', function () {
 
   it('should find one liners on multiple lines', function () {
     var c = code.onelinenewliner;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     var r = spy(compiled);
     // console.log('\n----------');
     // console.log(c);
@@ -185,33 +189,33 @@ describe('loop', function () {
 
   it('should handle brackets inside of loop conditionals', function () {
     var c = code.brackets;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     assert(spy(compiled) === 11);
   });
 
   it('should not corrupt multi-line (on more than one line) loops', function () {
     var c = code.lotolines;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     assert(spy(compiled) === 8);
   });
 
   it('should ignore when loop protect is disabled', function () {
     var c = code.disabled;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled === c);
     assert(spy(compiled) === 3);
   });
 
   it('should protect do loops', function () {
     var c = code.dowhile;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     assert(spy(compiled) === 3);
 
     c = code.dowhilenested;
-    compiled = loopProtect.rewriteLoops(c);
+    compiled = loopProtect(c);
     // console.log('\n----------');
     // console.log(c);
     // console.log('\n----------');
@@ -230,35 +234,35 @@ describe('labels', function () {
 
   it('should handle continue statements and gotos', function () {
     var c = code.continues;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(spy(compiled) === 10);
 
     c = code.continues2;
-    compiled = loopProtect.rewriteLoops(c);
+    compiled = loopProtect(c);
     assert(spy(compiled) === 2);
   });
 
   it('should handle labels with comments', function () {
     var c = code.labelWithComment;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(spy(compiled) === 10);
   });
 
   it('should handle things that *look* like labels', function () {
     var c = code.notlabels2;
-    var compiled = loopProtect.rewriteLoops(c);
+    var compiled = loopProtect(c);
     assert(compiled !== c);
     var result = run(compiled);
     assert(result === 10, 'actual ' + result);
 
     c = code.notlabels;
-    compiled = loopProtect.rewriteLoops(c);
+    compiled = loopProtect(c);
     assert(compiled !== c);
     result = run(compiled);
     assert(result === 10, 'actual ' + result);
 
     // c = code.cs;
-    // compiled = loopProtect.rewriteLoops(c);
+    // compiled = loopProtect(c);
     // assert(compiled !== c);
     // result = run(compiled);
     // assert(result === 10, 'actual ' + result);
