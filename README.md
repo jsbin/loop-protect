@@ -25,9 +25,9 @@ The loop protection can be used both on the client side and server side. It supp
 
 ### Public methods
 
-- loopProtect.hit (callback)
-- loopProtect.debug (method)
-- loopProtect.alias (string): used if loopProtect is aliased to a different variable
+- `loopProtect.hit(number)`: fired when a potential infinite loop is found. Can be overwritten (see example below).
+- `loopProtect.alias(string)`: used if loopProtect is aliased to a different variable.
+- `loopProtect.debug(bool)`: used for development to trace steps of protection (not included .min file)
 
 ### Example implementation
 
