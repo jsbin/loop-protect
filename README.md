@@ -32,21 +32,37 @@ The loop protection can be used both on the client side and server side. It supp
 ### Example implementation
 
 ```js
-// Get some arbitrary JavaScript code that *may* have an infinite loop
-var js = getUserCode();
-
 // we're going to alias the loopProtect object under a different name
 // when it runs inside the iframe, so we need to configure the loopProtect
 // *before* we process the JavaScript.
 loopProtect.alias = 'protect';
 
-var processed = loopProtect(js);
+// show the user we found an infinite loop and let the code carry on
+loopProtect.hit = function (line) {
+  alert('Potential infinite loop found on line ' + line);
+};
+
+// rewrite the user's JavaScript to protect loops
+var processed = loopProtect(getUserCode());
 
 // run in an iframe, and expose the loopProtect variable under a new name
 var iframe = getNewFrame();
 
-iframe.contentWindow.protect = loopProtect;
+// append the iframe to allow our code to run as soon as .close is called
+document.body.appendChild(iframe);
 
+// open the iframe and write the code to it
+var win = iframe.contentWindow;
+var doc = win.document;
+doc.open();
+
+// this line is why we use `loopProtect.alias = 'protect'`
+win.protect = loopProtect;
+
+doc.write('<script>' + processed + '<' + '/script>');
+doc.close();
+
+// code now runs, and if there's a loop, loopProtect.hit is called.
 ```
 
 ## Abstract
@@ -66,6 +82,11 @@ For it's purpose, this manual loop protection works pretty well. Most people spo
 
 - If the time between tests is 100ms or more, it's likely we're looking at a loop with an `alert` (or type of blocking call), so perhaps the loop protection can back off?
 
+## Contributors
+
+- Author: [Remy Sharp](https://github.com/remy)
+- [All contributors](https://github.com/jsbin/loop-protect/graphs/contributors)
+
 ## License
 
-http://jsbin.mit-license.org
+MIT / [http://jsbin.mit-license.org](http://jsbin.mit-license.org)
