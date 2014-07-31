@@ -1,3 +1,5 @@
+[![Test status](https://api.travis-ci.org/jsbin/loop-protect.png?branch=master)](https://travis-ci.org/jsbin/loop-protect.png)
+
 # loop-protect
 
 JS Bin's loop protection implementation.
