@@ -3,7 +3,7 @@
   "name": "loop-protect",
   "description": "Prevent infinite loops in dynamically eval'd JavaScript.",
   "main": "lib/loop-protect",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/jsbin/loop-protect",
   "repository": {
     "type": "git",
