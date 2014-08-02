@@ -2,7 +2,7 @@
 
 # loop-protect
 
-JS Bin's loop protection implementation.
+JS Bin's loop protection implementation as a reusable library.
 
 This code protects most cases where user code includes an infinite loop using a `while`, `for` or `do` loop.
 
