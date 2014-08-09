@@ -1,7 +1,6 @@
 'use strict';
 /*global describe:true, it: true, beforeEach: true */
 var assert = require('assert');
-var sinon = require('sinon');
 var loopProtect = require('../lib/loop-protect');
 
 global.loopProtect = loopProtect;
