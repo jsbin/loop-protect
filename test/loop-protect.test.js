@@ -44,6 +44,8 @@ var code = {
   notlabels: 'var foo = {\n bar: 1\n };\n \n function doit(i){}\n \n for (var i=0; i<10; i++) {\n doit(i);\n }\n return i;',
   notlabels2: '// Weird:\nfor (var i = 0; i < 10; i++) {}\nreturn i;',
   cs: 'var bar, foo;\n\nfoo = function(i) {\n  return {\n    id: i\n  };\n};\n\nbar = function(i) {\n\n  var j, _i, _results;\n\n  _results = [];\n  for (j = _i = 1; 1 <= i ? _i < i : _i > i; j = 1 <= i ? ++_i : --_i) {\n    _results.push(j);\n  }\n  return _results;\n};',
+  loopbehindif: 'if (false) {for (var i = 1; i--;) {throw Error;}}',
+  badloopbehindif: 'if (false) for (var i = 1; i--;) {throw Error;}',
 };
 
 var spy;
@@ -267,5 +269,17 @@ describe('labels', function () {
     // result = run(compiled);
     // assert(result === 10, 'actual ' + result);
   });
+
+  it('should handle if statement without {}', function() {
+    var c = code.loopbehindif;
+    var compiled = loopProtect(c);
+    assert(compiled !== c);
+    run(compiled);
+
+    c = code.badloopbehindif;
+    compiled = loopProtect(c);
+    assert(compiled !== c);
+    run(compiled);
+  })
 
 });
