@@ -36,6 +36,7 @@ var code = {
   ignorecomments: '\n/**\n * This function handles the click for every button.\n *\n * Using the same function reduces code duplication and makes the\n */\nreturn true;',
   dowhile: 'var x=0;\ndo\n {\n x++;\n } while (x < 3);\nreturn x;',
   dowhilenested: 'var x=0;\n do\n {\n x++;\n var b = 0;\n do {\n b++; \n } while (b < 3);\n } while (x < 3);\nreturn x;',
+  infinitedowhile: 'var x=0;\ndo\n {\n x=0;\n } while (x < 3);\n return x;',
   disabled: '// noprotect\nvar x=0;\ndo\n {\n x++;\n } while (x < 3);\nreturn x;',
   continues: 'var n = 0,\n i = 0,\n j = 0;\n \n outside:\n for (i; i < 10; i += 1) {\n for (j; j < 10; j += 1) {\n if (i === 5 && j === 5) {\n continue outside;\n }\n n += 1;\n }\n }\n \n return n;\n;',
   labelWithComment: 'label:\n// here be a label\n/*\n and there\'s some good examples in the loop - poop\n*/\nfor (var i = 0; i < 10; i++) {\n}\nreturn i;',
@@ -224,6 +225,11 @@ describe('loop', function () {
     // console.log(compiled);
     assert(compiled !== c);
     assert(spy(compiled) === 3);
+
+    c = code.infinitedowhile;
+    compiled = loopProtect(c);
+    assert(compiled !== c);
+    assert(spy(compiled) === 0);
   });
 });
 
