@@ -58,7 +58,7 @@ function run(code) {
 describe('loop', function () {
   beforeEach(function () {
     spy = sinon.spy(run);
-    loopProtect.debug(false);
+    loopProtect.debug(true);
   });
 
   it('should ignore comments', function () {
@@ -224,7 +224,6 @@ describe('loop', function () {
     // console.log(compiled);
     assert(compiled !== c);
     assert(spy(compiled) === 3);
-
   });
 });
 
