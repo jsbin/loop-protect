@@ -36,6 +36,7 @@ var code = {
   ignorecomments: '\n/**\n * This function handles the click for every button.\n *\n * Using the same function reduces code duplication and makes the\n */\nreturn true;',
   dowhile: 'var x=0;\ndo\n {\n x++;\n } while (x < 3);\nreturn x;',
   dowhilenested: 'var x=0;\n do\n {\n x++;\n var b = 0;\n do {\n b++; \n } while (b < 3);\n } while (x < 3);\nreturn x;',
+  infinitedowhile: 'var x=0;\ndo\n {\n x=0;\n } while (x < 3);\n return x;',
   disabled: '// noprotect\nvar x=0;\ndo\n {\n x++;\n } while (x < 3);\nreturn x;',
   continues: 'var n = 0,\n i = 0,\n j = 0;\n \n outside:\n for (i; i < 10; i += 1) {\n for (j; j < 10; j += 1) {\n if (i === 5 && j === 5) {\n continue outside;\n }\n n += 1;\n }\n }\n \n return n;\n;',
   labelWithComment: 'label:\n// here be a label\n/*\n and there\'s some good examples in the loop - poop\n*/\nfor (var i = 0; i < 10; i++) {\n}\nreturn i;',
@@ -44,6 +45,8 @@ var code = {
   notlabels: 'var foo = {\n bar: 1\n };\n \n function doit(i){}\n \n for (var i=0; i<10; i++) {\n doit(i);\n }\n return i;',
   notlabels2: '// Weird:\nfor (var i = 0; i < 10; i++) {}\nreturn i;',
   cs: 'var bar, foo;\n\nfoo = function(i) {\n  return {\n    id: i\n  };\n};\n\nbar = function(i) {\n\n  var j, _i, _results;\n\n  _results = [];\n  for (j = _i = 1; 1 <= i ? _i < i : _i > i; j = 1 <= i ? ++_i : --_i) {\n    _results.push(j);\n  }\n  return _results;\n};',
+  loopbehindif: 'if (false) {for (var i = 1; i--;) {throw Error;}}',
+  badloopbehindif: 'if (false) for (var i = 1; i--;) {throw Error;}',
 };
 
 var spy;
@@ -56,7 +59,7 @@ function run(code) {
 describe('loop', function () {
   beforeEach(function () {
     spy = sinon.spy(run);
-    loopProtect.debug(false);
+    loopProtect.debug(true);
   });
 
   it('should ignore comments', function () {
@@ -223,6 +226,10 @@ describe('loop', function () {
     assert(compiled !== c);
     assert(spy(compiled) === 3);
 
+    c = code.infinitedowhile;
+    compiled = loopProtect(c);
+    assert(compiled !== c);
+    assert(spy(compiled) === 0);
   });
 });
 
@@ -267,5 +274,17 @@ describe('labels', function () {
     // result = run(compiled);
     // assert(result === 10, 'actual ' + result);
   });
+
+  it('should handle if statement without {}', function() {
+    var c = code.loopbehindif;
+    var compiled = loopProtect(c);
+    assert(compiled !== c);
+    run(compiled);
+
+    c = code.badloopbehindif;
+    compiled = loopProtect(c);
+    assert(compiled !== c);
+    run(compiled);
+  })
 
 });
