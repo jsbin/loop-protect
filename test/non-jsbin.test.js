@@ -1,5 +1,5 @@
 'use strict';
-/*global describe:true, it: true, beforeEach: true */
+/*global describe:true, it: true */
 var assert = require('assert');
 var loopProtect = require('../lib/loop-protect');
 
@@ -17,7 +17,7 @@ describe('non-JS Bin use', function () {
     loopProtect.hit = function (line) {
       assert(line === 1, 'Loop found on line ' + line);
       done();
-    }
+    };
 
     var processed = loopProtect(code);
 

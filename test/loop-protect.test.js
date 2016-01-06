@@ -285,6 +285,6 @@ describe('labels', function () {
     compiled = loopProtect(c);
     assert(compiled !== c);
     run(compiled);
-  })
+  });
 
 });
