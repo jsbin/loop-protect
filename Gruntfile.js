@@ -15,10 +15,10 @@ module.exports = function (grunt) {
       options: {
         banner: '/*! <%= pkg.name %> | v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %> | <%= pkg.licenses[0].url %> */\n',
         compress: {
-          global_defs: {
+          'global_defs': {
             DEBUG: false
           },
-          dead_code: true
+          'dead_code': true
         },
         report: 'gzip'
       },

@@ -10,6 +10,8 @@
     "url": "git://github.com/jsbin/loop-protect.git"
   },
   "scripts": {
+    "version": "grunt dist && git add dist",
+    "postversion": "git push && git push --tags",
     "test": "node_modules/mocha/bin/_mocha -t 25000 --ui bdd --reporter list test/*.test.js"
   },
   "devDependencies": {
