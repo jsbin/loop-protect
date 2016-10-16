@@ -47,7 +47,8 @@ var code = {
   cs: 'var bar, foo;\n\nfoo = function(i) {\n  return {\n    id: i\n  };\n};\n\nbar = function(i) {\n\n  var j, _i, _results;\n\n  _results = [];\n  for (j = _i = 1; 1 <= i ? _i < i : _i > i; j = 1 <= i ? ++_i : --_i) {\n    _results.push(j);\n  }\n  return _results;\n};',
   loopbehindif: 'if (false) {for (var i = 1; i--;) {throw Error;}}',
   badloopbehindif: 'if (false) for (var i = 1; i--;) {throw Error;}',
-  singlelinemultiline: '/* reverse palinWord doe comparison*/'
+  singlelinemultiline: '/* reverse palinWord doe comparison*/',
+  complexmultiline: '/* This was a tough one for me.\nLet\'s use the Euclidean Algorithm to first get the GCD and\nthen use that to calculate the LCM\nThis below function for obtaining the gcd was posted on StackOverflow by "alex" at\nhttps://stackoverflow.com/questions/17445231/js-how-to-find-the-greatest-common-divisor/.\n*/'
 };
 
 var spy;
@@ -289,10 +290,17 @@ describe('labels', function () {
   });
 
   it('should handle single line "/* comment */"', function() {
-    var c = code.singlelinemultiline
+    var c = code.singlelinemultiline;
     var compiled = loopProtect(c);
     assert(compiled === c);
     run(compiled);
-  })
+  });
+
+  it('should handle complex multiline "/* comment */"', function() {
+    var c = code.complexmultiline;
+    var compiled = loopProtect(c);
+    assert(compiled === c);
+    run(compiled);
+  });
 
 });
