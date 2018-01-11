@@ -2,26 +2,19 @@
   "author": "Remy Sharp",
   "name": "loop-protect",
   "description": "Prevent infinite loops in dynamically eval'd JavaScript.",
-  "main": "lib/loop-protect",
-  "version": "1.0.1",
+  "main": "lib/",
+  "version": "2.0.0-beta.2",
   "homepage": "https://github.com/jsbin/loop-protect",
   "repository": {
     "type": "git",
     "url": "git://github.com/jsbin/loop-protect.git"
   },
   "scripts": {
-    "version": "grunt dist && git add dist",
-    "postversion": "git push && git push --tags",
-    "test": "node_modules/mocha/bin/_mocha -t 25000 --ui bdd --reporter list test/*.test.js"
+    "test": "jest test/*.test.js"
   },
   "devDependencies": {
-    "mocha": "~1.11.0",
-    "sinon": "~1.7.3",
-    "grunt": "~0.4.5",
-    "grunt-contrib-uglify": "~0.5.0",
-    "grunt-contrib-jshint": "~0.10.0",
-    "jshint-stylish": "~0.4.0",
-    "grunt-remove-logging": "~0.2.0"
+    "babel-standalone": "^6.26.0",
+    "jest": "^22.0.6"
   },
   "licenses": [
     {
