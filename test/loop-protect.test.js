@@ -1,5 +1,5 @@
 const Babel = require('babel-standalone');
-Babel.registerPlugin('loopProtection', require('../lib')(100));
+Babel.registerPlugin('loopProtection', require('../lib')(200));
 const assert = e => console.assert(e);
 
 const code = {
