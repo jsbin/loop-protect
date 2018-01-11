@@ -73,6 +73,40 @@ describe('loop', function() {
     spy = sinon.spy(run);
   });
 
+  // https://github.com/jsbin/loop-protect/issues/16
+  it('should handle nested for', () => {
+    const code = `for (var i = 0; i < 10; i = i + 1) {
+          for (var j = 0; j < 10; i = i + 1) {
+          }
+      }
+      return true`;
+
+    const compiled = loopProtect(code);
+    assert(run(compiled) === true);
+  });
+
+  // https://github.com/jsbin/loop-protect/issues/5
+  it('blank line', () => {
+    const code = `const log = () => {};while (1)
+
+    log('Hello')
+    return true`;
+
+    const compiled = loopProtect(code);
+    assert(run(compiled) === true);
+  });
+
+  it('with if', () => {
+    const code = `if (false) for (var i = 1; i--;) {
+      throw Error;
+  }
+
+  return true;`;
+
+    const compiled = loopProtect(code);
+    assert(run(compiled) === true);
+  });
+
   it('should ignore comments', function() {
     var c = code.ignorecomments;
     var compiled = loopProtect(c);
