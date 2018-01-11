@@ -148,8 +148,8 @@ describe('loop', function() {
     var c = code.irl2;
     var compiled = loopProtect(c);
     var r = run(compiled);
-    assert(compiled !== c);
-    assert(r === 120000, r);
+    expect(compiled).not.toBe(c);
+    expect(r).toBe(120000);
   });
 
   it('should rewrite loops when curlies are on the next line', function() {
