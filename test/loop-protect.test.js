@@ -1,5 +1,5 @@
 const Babel = require('babel-standalone');
-Babel.registerPlugin('loopProtection', require('../lib')(200));
+Babel.registerPlugin('loopProtection', require('../lib')(100));
 const assert = e => console.assert(e);
 
 const code = {
@@ -16,7 +16,7 @@ const code = {
   irl1:
     'var nums = [0,1];\n var total = 8;\n for(var i = 0; i <= total; i++){\n var newest = nums[i--]\n nums.push(newest);\n }\n return i;',
   irl2:
-    'var a = 0;\n for(var j=1;j<=2;j++){\n for(var i=1;i<=60000;i++) {\n a += 1;\n }\n }\n return a;',
+    'var a = 0;\n for(var j=1;j<=2;j++){\n for(var i=1;i<=30000;i++) {\n a += 1;\n }\n }\n return a;',
   notloops:
     'console.log("do");\nconsole.log("while");\nconsole.log(" foo do bar ");\nconsole.log(" foo while bar ");\nreturn true;',
   notprops:
@@ -83,6 +83,37 @@ describe('loop', function() {
 
     const compiled = loopProtect(code);
     assert(run(compiled) === true);
+  });
+
+  it('console error when passing string', () => {
+    const code = `var i = 0; while (true) i++; return true`;
+
+    Babel.registerPlugin(
+      'loopProtectionAlt2',
+      require('../lib')(100, 'Loop broken')
+    );
+
+    const compiled = Babel.transform(new Function(code).toString(), {
+      plugins: ['loopProtectionAlt2'],
+    }).code; // eslint-disable-line no-new-func
+    expect(run(compiled)).toBe(true);
+  });
+
+  it('throws when giving a custom function', () => {
+    const code = `var i = 0; while (true) i++; return true`;
+    const callback = line => {
+      throw new Error(`Bad loop on line ${line}`);
+    };
+
+    Babel.registerPlugin('loopProtectionAlt', require('../lib')(100, callback));
+
+    const compiled = Babel.transform(new Function(code).toString(), {
+      plugins: ['loopProtectionAlt'],
+    }).code; // eslint-disable-line no-new-func
+
+    expect(() => {
+      run(compiled);
+    }).toThrowError('Bad loop on line 2');
   });
 
   // https://github.com/jsbin/loop-protect/issues/5
@@ -183,7 +214,7 @@ describe('loop', function() {
     var compiled = loopProtect(c);
     var r = run(compiled);
     expect(compiled).not.toBe(c);
-    expect(r).toBe(120000);
+    expect(r).toBe(60000);
   });
 
   it('should rewrite loops when curlies are on the next line', function() {
