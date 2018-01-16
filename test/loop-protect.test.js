@@ -1,3 +1,4 @@
+/* eslint-env node, jest */
 const Babel = require('babel-standalone');
 Babel.registerPlugin('loopProtection', require('../lib')(100));
 const assert = e => console.assert(e);
