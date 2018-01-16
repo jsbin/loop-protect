@@ -12,8 +12,25 @@ Note that this does *not* solve the [halting problem](http://en.wikipedia.org/wi
 
 With loop protection in place, it means that a user can enter the code as follows on JS Bin, and the final `console.log` will still work.
 
+The code is transformed from this:
+
 ```js
 while (true) {
+  doSomething();
+}
+
+console.log('All finished');
+```
+
+…to this:
+
+```js
+let i = 0;
+var _LP = Date.now();
+while (true) {
+  if (Date.now() - _LP > 100)
+    break;
+
   doSomething();
 }
 
