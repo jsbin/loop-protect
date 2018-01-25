@@ -9,9 +9,10 @@ beforeEach(() => {
   done = jest.fn();
 });
 
-const transform = id => code => Babel.transform(new Function(code).toString(), {
-  plugins: [id],
-}).code; // eslint-disable-line no-new-func
+const transform = id => code =>
+  Babel.transform(new Function(code).toString(), {
+    plugins: [id],
+  }).code; // eslint-disable-line no-new-func
 
 const run = code => {
   // console.log(code);
@@ -28,7 +29,10 @@ test('no callback', () => {
 
 test('anonymous callback', () => {
   const id = 'lp2';
-  Babel.registerPlugin(id, require('../lib')(100, line => done(`line: ${line}`)));
+  Babel.registerPlugin(
+    id,
+    require('../lib')(100, line => done(`line: ${line}`))
+  );
   const after = transform(id)(code);
   run(after);
   expect(done).toHaveBeenCalledWith('line: 2');
@@ -46,7 +50,7 @@ test('arrow function callback', () => {
 
 test('named function callback', () => {
   const id = 'lp4';
-  function callback(line, ch) {
+  function callback(line) {
     done(`lp4: ${line}`);
   }
 
