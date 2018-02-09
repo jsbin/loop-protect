@@ -76,6 +76,47 @@ doc.close();
 // code now runs, and if there's an infinite loop, it's cleanly exited
 ```
 
+### Optional Second Argument 
+In the above implementation, when code transformed by loop-protect contains an infinite loop, the loop is cleanly exited with a `break` statement, and any code after the loop is executed normally. See [example](https://github.com/jsbin/loop-protect#example). 
+
+But what if you want to log an error to the console to warn the user, or throw an error instead, to stop execution when an infinite loop is encountered? The `protect` function takes an optional second argument which can handle both behaviors. 
+
+1. To log an error to the console, but continue exectution after the loop, pass `protect` a string as a second argument. When an infinite loop is encountered, this string will be logged with `console.error()`, letting the user know of their mistake. 
+
+2. To throw an error and stop execution, pass `protect` a simple callback function which throws a new error. Note that if you define the callback with a `line` parameter, you can use this with a template literal for a more specific error message. For example:
+
+```js
+import Babel from 'babel-standalone';
+import protect from 'loop-protect';
+
+const callback = line => {
+  throw new Error(`Bad loop on line ${line}`);
+};
+
+const timeout = 100;
+Babel.registerPlugin('loopProtection', protect(timeout, callback));
+
+const transform = source => Babel.transform(source, {
+  plugins: ['loopProtection'],
+}).code;
+  
+var processed = transform(getUserCode());
+
+// do more stuff with processed code here
+```
+
+With this implementation, the following would result:
+
+```js
+while (true) {
+  doSomething();
+}
+
+console.log('All finished'); // does not execute
+
+// Error: Bad loop on line 1
+```
+
 ## Contributors
 
 - Author: [Remy Sharp](https://github.com/remy)
