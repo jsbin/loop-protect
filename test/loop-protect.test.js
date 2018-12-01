@@ -18,7 +18,7 @@ const code = {
   irl1:
     'var nums = [0,1];\n var total = 8;\n for(var i = 0; i <= total; i++){\n var newest = nums[i--]\n nums.push(newest);\n }\n return i;',
   irl2:
-    'var a = 0;\n for(var j=1;j<=2;j++){\n for(var i=1;i<=30000;i++) {\n a += 1;\n }\n }\n return a;',
+    'var a = 0;\n for(var j=1;j<=2;j++)\n for(var i=1;i<=30000;i++) {\n a += 1;\n }\n return a;',
   notloops:
     'console.log("do");\nconsole.log("while");\nconsole.log(" foo do bar ");\nconsole.log(" foo while bar ");\nreturn true;',
   notprops:
@@ -56,6 +56,7 @@ const code = {
     'var bar, foo;\n\nfoo = function(i) {\n  return {\n    id: i\n  };\n};\n\nbar = function(i) {\n\n  var j, _i, _results;\n\n  _results = [];\n  for (j = _i = 1; 1 <= i ? _i < i : _i > i; j = 1 <= i ? ++_i : --_i) {\n    _results.push(j);\n  }\n  return _results;\n};',
   loopbehindif: 'if (false) {for (var i = 1; i--;) {throw Error;}}',
   badloopbehindif: 'if (false) for (var i = 1; i--;) {throw Error;}',
+  loopwithoutbody: 'var i = 0;\nwhile(++i < 10);\n return i;',
 };
 
 const sinon = {
@@ -218,6 +219,7 @@ describe('loop', function() {
   it('should allow nested loops to run', function() {
     var c = code.irl2;
     var compiled = loopProtect(c);
+    // console.log('\n---------\n' + c + '\n---------\n' + compiled);
     var r = run(compiled);
     expect(compiled).not.toBe(c);
     expect(r).toBe(60000);
@@ -276,6 +278,15 @@ describe('loop', function() {
     compiled = loopProtect(c);
     assert(compiled !== c);
     assert(spy(compiled) === 0);
+  });
+
+  it('should handle loop statement without {}', function() {
+    var c = code.loopwithoutbody;
+    var compiled = loopProtect(c);
+    // console.log('\n---------\n' + c + '\n---------\n' + compiled);
+    assert(compiled !== c);
+    var result = run(compiled);
+    assert(result === 10);
   });
 });
 
