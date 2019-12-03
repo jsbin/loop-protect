@@ -1,5 +1,5 @@
 /* eslint-env node, jest */
-const Babel = require('babel-standalone');
+const Babel = require('@babel/standalone');
 Babel.registerPlugin('loopProtection', require('../lib')(100));
 const assert = e => console.assert(e);
 
@@ -120,7 +120,7 @@ describe('loop', function() {
 
     expect(() => {
       run(compiled);
-    }).toThrowError('Bad loop on line 2');
+    }).toThrowError('Bad loop on line 3');
   });
 
   // https://github.com/jsbin/loop-protect/issues/5

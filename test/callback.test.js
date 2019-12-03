@@ -1,5 +1,5 @@
 /* eslint-env node, jest */
-const Babel = require('babel-standalone');
+const Babel = require('@babel/standalone');
 
 const code = `let i = 0; while (true) { i++; }; done(i)`;
 
@@ -35,7 +35,7 @@ test('anonymous callback', () => {
   );
   const after = transform(id)(code);
   run(after);
-  expect(done).toHaveBeenCalledWith('line: 2');
+  expect(done).toHaveBeenCalledWith('line: 3');
 });
 
 test('arrow function callback', () => {
@@ -45,7 +45,7 @@ test('arrow function callback', () => {
   Babel.registerPlugin(id, require('../lib')(100, callback));
   const after = transform(id)(code);
   run(after);
-  expect(done).toHaveBeenCalledWith(`${id}: 2`);
+  expect(done).toHaveBeenCalledWith(`${id}: 3`);
 });
 
 test('named function callback', () => {
@@ -57,5 +57,5 @@ test('named function callback', () => {
   Babel.registerPlugin(id, require('../lib')(100, callback));
   const after = transform(id)(code);
   run(after);
-  expect(done).toHaveBeenCalledWith(`${id}: 2`);
+  expect(done).toHaveBeenCalledWith(`${id}: 3`);
 });
