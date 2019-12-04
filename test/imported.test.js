@@ -1,5 +1,5 @@
 /* eslint-env node, jest */
-const Babel = require('babel-standalone');
+const Babel = require('@babel/standalone');
 const plugin = require('../lib');
 import callback from './callback-exported';
 
@@ -30,6 +30,6 @@ describe('imported anonymous callback', () => {
     Babel.registerPlugin(id, plugin(100, callback));
     const after = transform(id)(code);
     run(after);
-    expect(spy).toHaveBeenCalledWith(`ok: 3`);
+    expect(spy).toHaveBeenCalledWith(`ok: 4`);
   });
 });
