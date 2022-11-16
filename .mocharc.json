@@ -1,0 +1,13 @@
+{
+  "extension": [
+    "ts"
+  ],
+  "spec": [
+    "src/**/*.test.ts"
+  ],
+  "node-option": [
+    "no-warnings",
+    "unhandled-rejections=strict",
+    "loader=@esbuild-kit/esm-loader"
+  ]
+}

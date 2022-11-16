@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "module": "esnext",
+    "noEmit": true,
+    "strict": true,
+    "target": "esnext"
+  },
+  "include": [
+    "src/",
+    "rollup.config.js"
+  ]
+}
