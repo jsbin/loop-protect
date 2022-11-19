@@ -6,7 +6,8 @@
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "target": "es2015"
+    "target": "es2015",
+    "module": "es2015"
   },
   "exclude": [
     "src/**/*.test.ts",

@@ -19,5 +19,5 @@ export default defineConfig({
       name: 'loopProtect'
     }
   ],
-  plugins: [ts()]
+  plugins: [ts({ target: 'es2015' })]
 })
