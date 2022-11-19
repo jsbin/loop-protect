@@ -1,15 +1,15 @@
 {
-  "name": "@thebearingedge/loop-protect",
+  "name": "@thebearingedge/auto-break",
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/cjs/loop-protect.js",
-  "module": "./dist/esm/loop-protect.js",
-  "types": "./dist/loop-protect.d.ts",
+  "main": "./dist/cjs/auto-break.js",
+  "module": "./dist/esm/auto-break.js",
+  "types": "./dist/auto-break.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/loop-protect.js",
-      "require": "./dist/cjs/loop-protect.js"
+      "import": "./dist/esm/auto-break.js",
+      "require": "./dist/cjs/auto-break.js"
     }
   },
   "files": [
@@ -27,12 +27,12 @@
   "author": "Remy Sharp & freeCodeCamp",
   "license": "See license in LICENSE",
   "bugs": {
-    "url": "https://github.com/thebearingedge/loop-protect/issues"
+    "url": "https://github.com/thebearingedge/auto-break/issues"
   },
-  "homepage": "https://github.com/thebearingedge/loop-protect#readme",
+  "homepage": "https://github.com/thebearingedge/auto-break#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thebearingedge/loop-protect.git"
+    "url": "git+https://github.com/thebearingedge/auto-break.git"
   },
   "devDependencies": {
     "@babel/standalone": "^7.20.4",

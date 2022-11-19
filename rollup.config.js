@@ -2,21 +2,21 @@ import { defineConfig } from 'rollup'
 import ts from '@rollup/plugin-typescript'
 
 export default defineConfig({
-  input: 'src/loop-protect.ts',
+  input: 'src/auto-break.ts',
   output: [
     {
-      file: 'dist/cjs/loop-protect.js',
+      file: 'dist/cjs/auto-break.js',
       format: 'cjs',
       exports: 'auto'
     },
     {
-      file: 'dist/esm/loop-protect.js',
+      file: 'dist/esm/auto-break.js',
       format: 'esm'
     },
     {
-      file: 'dist/umd/loop-protect.js',
+      file: 'dist/umd/auto-break.js',
       format: 'umd',
-      name: 'loopProtect'
+      name: 'autoBreak'
     }
   ],
   plugins: [ts({ target: 'es2015' })]

@@ -145,7 +145,6 @@ function transformOnBreak({ t, transform, onBreak }: TransformOnBreakParams): Fu
     return t.functionExpression(onAutoBreak.id, onAutoBreak.params, onAutoBreak.body)
   }
 
-  /* c8 ignore next */ // should be unreachable
   throw new Error('loop-protect: invalid onBreak action')
 }
 
