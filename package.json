@@ -1,15 +1,15 @@
 {
-  "name": "@thebearingedge/auto-break",
+  "name": "babel-auto-break",
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/cjs/auto-break.js",
-  "module": "./dist/esm/auto-break.js",
-  "types": "./dist/auto-break.d.ts",
+  "main": "./dist/cjs/babel-auto-break.js",
+  "module": "./dist/esm/babel-auto-break.js",
+  "types": "./dist/babel-auto-break.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/auto-break.js",
-      "require": "./dist/cjs/auto-break.js"
+      "import": "./dist/esm/babel-auto-break.js",
+      "require": "./dist/cjs/babel-auto-break.js"
     }
   },
   "files": [
@@ -27,12 +27,12 @@
   "author": "Remy Sharp & freeCodeCamp",
   "license": "See license in LICENSE",
   "bugs": {
-    "url": "https://github.com/thebearingedge/auto-break/issues"
+    "url": "https://github.com/thebearingedge/babel-auto-break/issues"
   },
-  "homepage": "https://github.com/thebearingedge/auto-break#readme",
+  "homepage": "https://github.com/thebearingedge/babel-auto-break#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thebearingedge/auto-break.git"
+    "url": "git+https://github.com/thebearingedge/babel-auto-break.git"
   },
   "devDependencies": {
     "@babel/standalone": "^7.20.4",

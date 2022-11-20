@@ -2,7 +2,7 @@ import sinonChai from 'sinon-chai'
 import chai, { expect } from 'chai'
 import babel from '@babel/standalone'
 import { stub, SinonStub } from 'sinon'
-import autoBreak, { AutoBreakOptions } from './auto-break'
+import autoBreak, { AutoBreakOptions } from './babel-auto-break'
 
 chai.use(sinonChai)
 
@@ -65,6 +65,15 @@ describe('infinite loops', () => {
       return i
     `)
     expect(run()).to.be.above(0)
+  })
+
+  it('breaks from null for loops', () => {
+    const run = withAutoBreak(`
+      let i = 0
+      for (;;) {}
+      return i
+    `)
+    expect(run()).to.equal(0)
   })
 
   it('breaks from nested for loops', () => {
@@ -135,48 +144,37 @@ describe('string error message', () => {
 
 describe('custom callback', () => {
 
-  afterEach(() => delete (global as any).done)
-
-  it('calls a named function', done => {
-    (global as any).done = done
+  it('calls a named function', () => {
     const run = withAutoBreak(`
       while (true);
     `, {
       onBreak: function handleBreak(line: number, column: number): void {
-        expect(line).to.be.a('number')
-        expect(column).to.be.a('number')
-        done()
+        throw new Error(`infinite loop at ${line}:${column}`)
       }
     })
-    run()
+    expect(() => run()).to.throw('infinite loop at 4:6')
   })
 
-  it('calls an anonymous function', done => {
-    (global as any).done = done
+  it('calls an anonymous function', () => {
     const run = withAutoBreak(`
       while (true);
     `, {
       onBreak: function (line: number, column: number): void {
-        expect(line).to.be.a('number')
-        expect(column).to.be.a('number')
-        done()
+        throw new Error(`infinite loop at ${line}:${column}`)
       }
     })
-    run()
+    expect(() => run()).to.throw('infinite loop at 4:6')
   })
 
-  it('calls an arrow function', done => {
-    (global as any).done = done
+  it('calls an arrow function', () => {
     const run = withAutoBreak(`
       while (true);
     `, {
       onBreak: (line: number, column: number) => {
-        expect(line).to.be.a('number')
-        expect(column).to.be.a('number')
-        done()
+        throw new Error(`infinite loop at ${line}:${column}`)
       }
     })
-    run()
+    expect(() => run()).to.throw('infinite loop at 4:6')
   })
 
 })

@@ -36,7 +36,8 @@ export default function autoBreak(babel: Babel, options: AutoBreakOptions = {}):
   }
 
   function breakAfter(loop: Loop): void {
-    const { line, column } = loop.node.loc?.start ?? { line: 0, column: 0 }
+
+    const { line, column } = { line: 0, column: 0, ...loop.node.loc?.start }
     const id = loop.scope.generateUidIdentifier('auto_break_start')
 
     loop.insertBefore(generateInitialization({ t, id }))
@@ -75,7 +76,8 @@ function transformOnBreak({ t, transform, onBreak }: TransformOnBreakParams): Fu
     return t.functionExpression(onAutoBreak.id, onAutoBreak.params, onAutoBreak.body)
   }
 
-  throw new Error('loop-protect: invalid onBreak action')
+  /* c8 ignore next */
+  throw new Error('babel-babel-auto-break: invalid onBreak action') // unreachable
 }
 
 const noop = function (): void { }

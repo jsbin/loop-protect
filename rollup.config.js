@@ -2,19 +2,19 @@ import { defineConfig } from 'rollup'
 import ts from '@rollup/plugin-typescript'
 
 export default defineConfig({
-  input: 'src/auto-break.ts',
+  input: 'src/babel-auto-break.ts',
   output: [
     {
-      file: 'dist/cjs/auto-break.js',
+      file: 'dist/cjs/babel-auto-break.js',
       format: 'cjs',
       exports: 'auto'
     },
     {
-      file: 'dist/esm/auto-break.js',
+      file: 'dist/esm/babel-auto-break.js',
       format: 'esm'
     },
     {
-      file: 'dist/umd/auto-break.js',
+      file: 'dist/umd/babel-auto-break.js',
       format: 'umd',
       name: 'autoBreak'
     }
